@@ -1,13 +1,19 @@
 package main
 
 import (
-	"net/http"
+	"timelight-backend/api"
+	"timelight-backend/core"
+	"timelight-backend/model"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
+	core.LoggerInit()
+	model.DBInit()
+	defer model.GetDB().Close()
+
 	// Echo instance
 	e := echo.New()
 
@@ -16,13 +22,8 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
-	e.GET("/", hello)
+	api.Bind(e)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
-}
-
-// Handler
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
 }
