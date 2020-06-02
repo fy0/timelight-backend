@@ -29,3 +29,13 @@ func (m Todo) MarshalJSON() ([]byte, error) {
 		Alias:  (*Alias)(&m),
 	})
 }
+
+func TodoGetList(parent []byte, all bool) []*Todo {
+	q := Todo{Parent: parent}
+
+	ret := []*Todo{}
+	items := []Todo{}
+	db.Where(&q).Order("created_at desc").Find(&items)
+
+	return ret
+}
